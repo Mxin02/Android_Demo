@@ -1,0 +1,45 @@
+package com.mxin.android.nohttp_package.nohttp;
+
+import android.content.Context;
+
+import com.yolanda.nohttp.NoHttp;
+import com.yolanda.nohttp.rest.Request;
+import com.yolanda.nohttp.rest.RequestQueue;
+
+/**
+ * Created by Mxin on 2018/3/26.
+ */
+
+public class CallServer {
+
+    private final RequestQueue mQueue;
+
+    private CallServer(){
+
+        //创建一个队列
+        mQueue = NoHttp.newRequestQueue();
+
+    }
+
+    private static CallServer callServer;
+
+    public synchronized static CallServer   getInstance(){
+
+        if (callServer == null){
+
+             callServer = new CallServer();
+        }
+        return  callServer;
+    }
+
+    /***
+     * 添加一个请求到队列中
+     */
+    public  <T> void add(Context context, int what, Request<T> request,
+                         HttpListener<T> httpListener, boolean canCancle, boolean isLoading){
+
+            mQueue.add(what,request,
+                    new HttpResponseListener<T>(context,request,httpListener,canCancle,isLoading ));
+    }
+
+}
